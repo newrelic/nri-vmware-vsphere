@@ -10,7 +10,7 @@ import (
 	"os"
 	"strconv"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	logrus "github.com/sirupsen/logrus"
 	"github.com/vmware/govmomi"
@@ -39,7 +39,7 @@ type PerfCollector struct {
 	batchSizePerfMetrics   int
 }
 
-//this struct is not needed we can decide to pass more info and process it in the process, it would hide logic
+// this struct is not needed we can decide to pass more info and process it in the process, it would hide logic
 type PerfMetric struct {
 	Value   int64
 	Counter string
@@ -126,11 +126,13 @@ func (c *PerfCollector) Collect(mos []types.ManagedObjectReference, metrics []ty
 }
 
 // The metrics returned have a field indicating the 'instance' they refer to. However, that field could be empty in some cases.
-//		Instance is an identifier that is derived from configuration names for the device associated with the metric.
-// 		It identifies the instance of the metric with its source. This property may be empty.
-// 		-  For memory and aggregated statistics, this property is empty.
-// 		-  For host and virtual machine devices, this property contains the name of the device, such as the name of the host-bus   adapter or the name of the virtual Ethernet adapter. For example, “mpx.vmhba33:C0:T0:L0” or “vmnic0:”
-// 		-  For a CPU, this property identifies the numeric position within the CPU core, such as 0, 1, 2, 3."""
+//
+//	Instance is an identifier that is derived from configuration names for the device associated with the metric.
+//	It identifies the instance of the metric with its source. This property may be empty.
+//	-  For memory and aggregated statistics, this property is empty.
+//	-  For host and virtual machine devices, this property contains the name of the device, such as the name of the host-bus   adapter or the name of the virtual Ethernet adapter. For example, “mpx.vmhba33:C0:T0:L0” or “vmnic0:”
+//	-  For a CPU, this property identifies the numeric position within the CPU core, such as 0, 1, 2, 3."""
+//
 // We give priority to the values having the `instance` specified. If more than one value is returned we compute the average.
 // If no value having an 'instance' is found for a perf metric we fall back to 'instanceless' values.
 // If no value is returned we do not report that specific perf metric
@@ -307,7 +309,7 @@ type perfMetricsIDs struct {
 	Datastore              []types.PerfMetricId
 }
 
-//This struct is used to parse the config file
+// This struct is used to parse the config file
 type ymlConfig struct {
 	Host                   map[string][]string `yaml:"host"`
 	VM                     map[string][]string `yaml:"vm"`
